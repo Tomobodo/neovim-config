@@ -3,6 +3,8 @@ return
   "neovim/nvim-lspconfig",
   config = function()
     local lspconfig = require("lspconfig")
+
+    -- Lua
     lspconfig.lua_ls.setup({
       on_init = function(client)
         local path = client.workspace_folders[1].name
@@ -26,6 +28,22 @@ return
         Lua = {}
       }
     })
-    lspconfig.ts_ls.setup({})
+
+    -- Typescript
+    lspconfig.ts_ls.setup {}
+    lspconfig.eslint.setup({
+      on_attach = function(client, bufnr)
+        vim.api.nvim_create_autocmd("BufWritePre", {
+          buffer = bufnr,
+          command = "EslintFixAll"
+        })
+      end
+    })
+
+    -- CSS, SCSS
+    lspconfig.cssls.setup {}
+
+    -- JSON
+    lspconfig.jsonls.setup {}
   end,
 }
