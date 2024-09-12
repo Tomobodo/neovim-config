@@ -7,7 +7,7 @@ return {
     start_in_insert = true,
     auto_scroll = true,
     winbar = {
-      enabled = true,
+      enabled = false,
       name_formatter = function(term)
         return term.name
       end
