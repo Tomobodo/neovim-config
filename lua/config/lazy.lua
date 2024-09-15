@@ -22,6 +22,16 @@ require("lazy").setup({
   spec = {
     { import = "plugins" },
   },
+  cmd = { "Lazy" },
+  event = "VeryLazy",
   install = { colorscheme = { "catppuccin-mocha" } },
-  checker = { enabled = true },
+  checker = { enabled = false },
+  defaults = {
+    lazy = false
+  },
+  performance = {
+    cache = {
+      enabled = true
+    }
+  }
 })

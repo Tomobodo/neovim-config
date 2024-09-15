@@ -1,20 +1,45 @@
+-- fold
+vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
+vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
+
 -- navigation
+local navOpts = { noremap = true, silent = true }
+
 vim.keymap.set('n', '<tab>', function()
   if vim.bo.buftype == '' then
     vim.cmd('bnext')
   end
 end, { desc = 'Next buffer' })
 
-vim.keymap.set('n', '<s-tab>', function()
+vim.keymap.set('n', '<S-tab>', function()
   if vim.bo.buftype == '' then
     vim.cmd('bprev')
   end
 end, { desc = 'Previous buffer' })
 
-vim.keymap.set('n', '<c-x>', '<Cmd>bdelete!<cr>', { desc = 'Delete buffer' })
+vim.keymap.set('n', '<C-h>', '<C-w>h', navOpts)
+vim.keymap.set('n', '<C-j>', '<C-w>j', navOpts)
+vim.keymap.set('n', '<C-k>', '<C-w>k', navOpts)
+vim.keymap.set('n', '<C-l>', '<C-w>l', navOpts)
+
+-- motion
+local motionOpts = { noremap = true, silent = true }
+
+vim.keymap.set('i', '<C-h>', '<LEFT>', motionOpts)
+vim.keymap.set('i', '<C-j>', '<DOWN>', motionOpts)
+vim.keymap.set('i', '<C-k>', '<UP>', motionOpts)
+vim.keymap.set('i', '<C-l>', '<RIGHT>', motionOpts)
+
+-- bufdelete
+vim.keymap.set('n', '<C-x>',
+  function()
+    require('bufdelete').bufdelete(0, true)
+  end,
+  { desc = 'Delete buffer' })
 
 -- toggleterm
-vim.keymap.set('n', '<leader>h', '<Cmd>ToggleTerm<cr>', { noremap = true, desc = 'Open terminal' })
+vim.keymap.set('n', '<A-h>', '<Cmd>ToggleTerm<cr>', { noremap = true, desc = 'Open terminal' })
+vim.keymap.set('t', '<A-h>', '<Cmd>ToggleTerm<cr>', { noremap = true, desc = 'Close terminal' })
 vim.keymap.set('t', '<esc>', [[<C-\><C-n>]], { noremap = true, desc = "Exit terminal mode" })
 vim.keymap.set('t', '<C-w>', [[<C-\><C-n><C-w>]], { noremap = true, desc = "Window move" })
 
@@ -27,6 +52,9 @@ vim.keymap.set('n', '<leader>fh', builtin.help_tags, {})
 
 -- nvimtree
 vim.keymap.set('n', '<c-n>', '<Cmd>NvimTreeFindFileToggle<cr>', { desc = 'toggle file tree' })
+
+-- diagnostic
+vim.keymap.set('n', 'f', vim.diagnostic.open_float, { noremap = true, silent = true })
 
 -- lsp
 vim.api.nvim_create_autocmd('LspAttach', {
