@@ -13,7 +13,7 @@ vim.opt.swapfile = false
 vim.opt.wildignore = "*/node_modules/*"
 
 -- fold
-vim.o.foldcolumn = '0'
+vim.o.foldcolumn = "0"
 vim.o.foldlevel = 99
 vim.o.foldlevelstart = 99
 vim.o.foldenable = true
@@ -29,11 +29,23 @@ vim.bo.softtabstop = 2
 vim.opt.termguicolors = true
 
 -- clipboard
-vim.opt.clipboard = "unnamedplus"
+require("config.clipboard")
+-- vim.opt.clipboard = "unnamedplus"
 
 -- diagnostic
 vim.opt.signcolumn = "yes"
 vim.diagnostic.config({
-  signs = true,
-  update_in_insert = true,
+	signs = true,
+	update_in_insert = true,
+})
+
+-- format
+
+--format on save
+local augroup = vim.api.nvim_create_augroup
+local autocmd = vim.api.nvim_create_autocmd
+augroup("__formatter__", { clear = true })
+autocmd("BufWritePost", {
+	group = "__formatter__",
+	command = ":FormatWrite",
 })

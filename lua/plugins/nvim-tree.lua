@@ -1,16 +1,18 @@
-return
-{
-  {
-    "nvim-tree/nvim-tree.lua",
-    config = function()
-      require('nvim-tree').setup({
-        filters = {
-          dotfiles = true
-        }
-      })
-    end
-  },
-  {
-    "nvim-tree/nvim-web-devicons"
-  }
+return {
+	{
+		"nvim-tree/nvim-tree.lua",
+		dependencies = {
+			"nvim-tree/nvim-web-devicons",
+		},
+		config = function()
+			require("nvim-tree").setup({
+				filters = {
+					dotfiles = true,
+				},
+				view = {
+					preserve_window_proportions = true,
+				},
+			})
+		end,
+	},
 }

@@ -1,13 +1,14 @@
 return {
-  'kevinhwang91/nvim-ufo',
-  dependencies = {
-    { 'kevinhwang91/promise-async' }
-  },
-  config = function()
-    require('ufo').setup({
-      provider_selector = function(_, _, _)
-        return { 'treesitter', 'indent' }
-      end
-    })
-  end
+	"kevinhwang91/nvim-ufo",
+	event = "VeryLazy",
+	dependencies = {
+		{ "kevinhwang91/promise-async" },
+	},
+	config = function()
+		require("ufo").setup({
+			provider_selector = function(_, _, _)
+				return { "treesitter", "indent" }
+			end,
+		})
+	end,
 }
