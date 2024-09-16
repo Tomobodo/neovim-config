@@ -11,9 +11,9 @@ return {
 			cmake_build_options = {},
 			cmake_build_directory = function()
 				if osys.iswin32 then
-					return "out\\${variant:buildType}"
+					return "build\\${variant:buildType}"
 				end
-				return "out/${variant:buildType}"
+				return "build/${variant:buildType}"
 			end,
 			cmake_soft_link_compile_commands = true,
 			cmake_compile_commands_from_lsp = false,
@@ -32,28 +32,27 @@ return {
 			},
 			cmake_executor = {
 				name = "quickfix",
-				defaults_opts = {
+				opts = {},
+				default_opts = {
 					quickfix = {
 						show = "always",
 						position = "belowright",
 						size = 10,
+						encoding = "utf-8",
+						auto_close_when_success = true,
 					},
 				},
 			},
-			cmake_terminal = {
-				name = "terminal",
-				opts = {
-					name = "Main Terminal",
-					prefix_name = "[CMake]: ",
-					split_direction = "horizontal",
-					split_size = 45,
-					single_terminal_per_instance = true,
-					single_terminal_per_tab = true,
-					keep_terminal_static_location = true,
-					start_insert_in_launch_task = false,
-					start_insert_in_other_task = false,
-					focus_on_main_terminal = false,
-					focus_on_launch_terminal = false,
+			cmake_runner = {
+				name = "toggleterm",
+				opts = {},
+				default_opts = {
+					toggleterm = {
+						direction = "horizontal",
+						close_on_exit = false,
+						auto_scroll = true,
+						singleton = true,
+					},
 				},
 			},
 			cmake_notifications = {

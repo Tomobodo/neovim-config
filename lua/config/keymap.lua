@@ -36,8 +36,23 @@ vim.keymap.set("n", "<C-x>", function()
 end, { desc = "Delete buffer" })
 
 -- toggleterm
-vim.keymap.set("n", "<A-h>", "<Cmd>ToggleTerm<cr>", { noremap = true, desc = "Open terminal" })
-vim.keymap.set("t", "<A-h>", "<Cmd>ToggleTerm<cr>", { noremap = true, desc = "Close terminal" })
+vim.keymap.set("n", "<A-h>", "<Cmd>ToggleTerm direction=horizontal<cr>", { noremap = true, desc = "Open terminal" })
+vim.keymap.set(
+	"n",
+	"<A-v>",
+	"<Cmd>ToggleTerm direction=vertical size=80<cr>",
+	{ noremap = true, desc = "Open vertical terminal" }
+)
+vim.keymap.set(
+	"n",
+	"<A-n>",
+	"<cmd>ToggleTerm direction=float size=80<cr>",
+	{ noremap = true, desc = "Open floating terminal" }
+)
+
+vim.keymap.set("t", "<A-h>", "<Cmd>ToggleTerm direction=horizontal<cr>", { noremap = true, desc = "Close terminal" })
+vim.keymap.set("t", "<A-t>", "<Cmd>ToggleTerm direction=vertical<cr>", { noremap = true, desc = "Close terminal" })
+vim.keymap.set("t", "<A-n>", "<Cmd>ToggleTerm direction=float<cr>", { noremap = true, desc = "Close terminal" })
 vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], { noremap = true, desc = "Exit terminal mode" })
 vim.keymap.set("t", "<C-w>", [[<C-\><C-n><C-w>]], { noremap = true, desc = "Window move" })
 
@@ -97,7 +112,38 @@ vim.api.nvim_create_autocmd("LspAttach", {
 		end
 
 		if client.supports_method("textDocument/format") then
-			vim.keymap.set("n", "<leader>rf", vim.lsp.buf.format, bufopts)
+			vim.keymap.set("n", "<leader>cf", vim.lsp.buf.format, bufopts)
 		end
 	end,
+})
+
+-- cmake
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "c", "cpp", "cxx", "h", "hpp", "hxx", "cmake", "CMakeList.txt" },
+	callback = function()
+		vim.schedule(function()
+			vim.keymap.set("n", "<C-b>", "<Cmd>CMakeBuild<CR>", { noremap = true, desc = "build project" })
+			vim.keymap.set("n", "<C-r>", "<Cmd>CMakeRun<CR>", { noremap = true, desc = "build and run project" })
+			vim.keymap.set("n", "<C-R>", "<Cmd>CMakeDebug<CR>", { noremap = true, desc = "build and debug project" })
+		end)
+	end,
+})
+
+--dap
+vim.keymap.set(
+	"n",
+	"<leader>db",
+	"<cmd>DapToggleBreakpoint<cr>",
+	{ noremap = true, desc = "Toggle breakpoint at line" }
+)
+vim.keymap.set("n", "<leader>dr", "<cmd>DapContinue<cr>", { noremap = true, desc = "Start or continue the debugger" })
+vim.keymap.set("n", "<leader>dt", "<cmd>DapTerminate<cr>", { noremap = true, desc = "Stop the debugger" })
+
+--dapui
+local dapui = require("dapui")
+vim.keymap.set("n", "<leader>du", function()
+	dapui.toggle()
+end, {
+	noremap = true,
+	desc = "Toggle dapui",
 })

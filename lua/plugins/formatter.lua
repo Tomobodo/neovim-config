@@ -12,6 +12,9 @@ return {
 				lua = {
 					require("formatter.filetypes.lua").stylua,
 				},
+				cmake = {
+					require("formatter.filetypes.cmake").cmakeformat,
+				},
 				c = {
 					require("formatter.filetypes.c").clangformat,
 				},
@@ -19,10 +22,10 @@ return {
 					require("formatter.filetypes.cpp").clangformat,
 				},
 				rs = {
-					require("formatter.filetypes.rust"),
+					require("formatter.filetypes.rust").rustfmt,
 				},
 				sh = {
-					require("formatter.filetypes.sh"),
+					require("formatter.filetypes.sh").shfmt,
 				},
 				-- web
 				json = {

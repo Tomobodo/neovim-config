@@ -3,9 +3,40 @@ return {
 	event = "VeryLazy",
 	config = function()
 		local lspconfig = require("lspconfig")
+		local util = lspconfig.util
+		local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+		-- CMAKE
+		lspconfig.cmake.setup({
+			capabilities = capabilities,
+			filetypes = {
+				"cmake",
+			},
+			init_options = {
+				buildDirectory = "build",
+			},
+			root_dir = util.root_pattern("CMakePresets.json", "CTestConfig.cmake", "build", "cmake"),
+			single_file_support = true,
+			cmd = { "cmake-language-server" },
+		})
+
+		-- C / CPP
+		lspconfig.clangd.setup({
+			capabilities = capabilities,
+			root_dir = util.root_pattern(
+				".clangd",
+				".clang-tidy",
+				".clang-format",
+				"compile_commands.json",
+				"CMakeLists.txt"
+			),
+			single_file_support = true,
+			cmd = { "clangd" },
+		})
 
 		-- Lua
 		lspconfig.lua_ls.setup({
+			capabilities = capabilities,
 			on_init = function(client)
 				local path = client.workspace_folders[1].name
 				if vim.loop.fs_stat(path .. "/.luarc.json") or vim.loop.fs_stat(path .. "/.luarc.jsonc") then
@@ -30,8 +61,12 @@ return {
 		})
 
 		-- Typescript
-		lspconfig.ts_ls.setup({})
+		lspconfig.ts_ls.setup({
+			capabilities = capabilities,
+		})
+
 		lspconfig.eslint.setup({
+			capabilities = capabilities,
 			on_attach = function(client, bufnr)
 				vim.api.nvim_create_autocmd("BufWritePre", {
 					buffer = bufnr,
@@ -41,9 +76,13 @@ return {
 		})
 
 		-- CSS, SCSS
-		lspconfig.cssls.setup({})
+		lspconfig.cssls.setup({
+			capabilities = capabilities,
+		})
 
 		-- JSON
-		lspconfig.jsonls.setup({})
+		lspconfig.jsonls.setup({
+			capabilities = capabilities,
+		})
 	end,
 }
