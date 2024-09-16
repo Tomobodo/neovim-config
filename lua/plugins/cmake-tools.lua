@@ -1,3 +1,5 @@
+local cmake_kits_path = os.getenv("CMAKE_KITS_PATH")
+
 return {
 	"Civitasv/cmake-tools.nvim",
 	event = "VeryLazy",
@@ -17,7 +19,7 @@ return {
 			end,
 			cmake_soft_link_compile_commands = true,
 			cmake_compile_commands_from_lsp = false,
-			cmake_kits_path = "/home/tomo/workspace/cpp/CMakeKits.json",
+			cmake_kits_path = cmake_kits_path,
 			cmake_variants_message = {
 				short = { show = true },
 				long = { show = true, max_lenght = 40 },

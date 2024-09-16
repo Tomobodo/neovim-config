@@ -122,9 +122,9 @@ vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "c", "cpp", "cxx", "h", "hpp", "hxx", "cmake", "CMakeList.txt" },
 	callback = function()
 		vim.schedule(function()
-			vim.keymap.set("n", "<C-b>", "<Cmd>CMakeBuild<CR>", { noremap = true, desc = "build project" })
-			vim.keymap.set("n", "<C-r>", "<Cmd>CMakeRun<CR>", { noremap = true, desc = "build and run project" })
-			vim.keymap.set("n", "<C-R>", "<Cmd>CMakeDebug<CR>", { noremap = true, desc = "build and debug project" })
+			vim.keymap.set("n", "<c-b>", "<Cmd>CMakeBuild<CR>", { noremap = true, desc = "build project" })
+			vim.keymap.set("n", "<c-r>", "<Cmd>CMakeRun<CR>", { noremap = true, desc = "build and run project" })
+			vim.keymap.set("n", "<c-d>", "<Cmd>CMakeDebug<CR>", { noremap = true, desc = "build and debug project" })
 		end)
 	end,
 })
