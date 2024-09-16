@@ -1,3 +1,8 @@
+local shell = "zsh"
+if vim.fn.has("win32") == 1 then
+  shell = "zsh.exe"
+end
+
 return {
 	"akinsho/toggleterm.nvim",
 	version = "*",
@@ -6,7 +11,7 @@ return {
 		shade_terminals = true,
 		start_in_insert = true,
 		auto_scroll = true,
-		shell = vim.o.shell,
+		shell = shell,
 		winbar = {
 			enabled = false,
 			name_formatter = function(term)

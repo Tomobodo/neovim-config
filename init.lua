@@ -2,9 +2,8 @@ require("config.lazy")
 require("config.keymap")
 
 -- shell
-vim.opt.shell = "zsh"
-vim.opt.shellcmdflag = "-c"
--- vim.opt.shellslash = true
+-- vim.opt.shell="zsh"
+-- vim.opt.shellcmdflag="-c"
 
 -- swap
 vim.opt.swapfile = false
@@ -30,7 +29,6 @@ vim.opt.termguicolors = true
 
 -- clipboard
 require("config.clipboard")
--- vim.opt.clipboard = "unnamedplus"
 
 -- diagnostic
 vim.opt.signcolumn = "yes"
@@ -49,3 +47,4 @@ autocmd("BufWritePost", {
 	group = "__formatter__",
 	command = ":FormatWrite",
 })
+
