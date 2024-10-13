@@ -17,6 +17,9 @@ vim.o.foldlevel = 99
 vim.o.foldlevelstart = 99
 vim.o.foldenable = true
 
+-- autoreload
+vim.o.autoread = true
+
 -- tabs
 vim.opt.number = true
 vim.opt.tabstop = 2
@@ -48,3 +51,8 @@ autocmd("BufWritePost", {
 	command = ":FormatWrite",
 })
 
+--filetypes
+autocmd({ "BufRead", "BufNewFile" }, {
+	pattern = "*.njk",
+	command = "setfiletype html",
+})

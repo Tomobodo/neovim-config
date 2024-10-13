@@ -52,6 +52,9 @@ return {
 				typescript = {
 					require("formatter.filetypes.typescript").prettier,
 				},
+				php = {
+					require("formatter.filetypes.php").phpcbf,
+				},
 				-- any
 				["*"] = {
 					require("formatter.filetypes.any").remove_trailing_whitespace,

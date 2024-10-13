@@ -84,5 +84,10 @@ return {
 		lspconfig.jsonls.setup({
 			capabilities = capabilities,
 		})
+
+		-- PHP
+		lspconfig.phpactor.setup({
+			capabilities = capabilities,
+		})
 	end,
 }

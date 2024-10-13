@@ -5,9 +5,9 @@ return {
 		local configs = require("nvim-treesitter.configs")
 
 		configs.setup({
-			ensute_installed = {
+			ensure_installed = {
 				"c",
-				"c++",
+				"cpp",
 				"cmake",
 				"lua",
 				"vim",
@@ -16,8 +16,7 @@ return {
 				"typescript",
 				"rust",
 				"html",
-				"jsx",
-				"tsx",
+				"php",
 			},
 			sync_install = false,
 			highlight = { enable = true },

@@ -130,6 +130,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 --dap
+local dap = require("dap")
 vim.keymap.set(
 	"n",
 	"<leader>db",
@@ -138,6 +139,9 @@ vim.keymap.set(
 )
 vim.keymap.set("n", "<leader>dr", "<cmd>DapContinue<cr>", { noremap = true, desc = "Start or continue the debugger" })
 vim.keymap.set("n", "<leader>dt", "<cmd>DapTerminate<cr>", { noremap = true, desc = "Stop the debugger" })
+vim.keymap.set("n", "<leader>dl", function()
+	dap.run_last()
+end, { noremap = true, desc = "Run last debug target" })
 
 --dapui
 local dapui = require("dapui")
