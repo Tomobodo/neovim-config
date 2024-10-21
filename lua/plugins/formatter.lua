@@ -21,7 +21,7 @@ return {
 				cpp = {
 					require("formatter.filetypes.cpp").clangformat,
 				},
-				rs = {
+				rust = {
 					require("formatter.filetypes.rust").rustfmt,
 				},
 				sh = {

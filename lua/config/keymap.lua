@@ -129,6 +129,20 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
+-- rustacean
+vim.g.rustaceanvim = {
+	server = {
+		on_attach = function(client, bufnr)
+			vim.keymap.set("n", "<c-r>", function()
+				vim.cmd.RustLsp("run")
+			end, { noremap = true, desc = "Run rust target" })
+			vim.keymap.set("n", "<c-d>", function()
+				vim.cmd.RustLsp("debug")
+			end, { noremap = true, desc = "Debug rust target" })
+		end,
+	},
+}
+
 --dap
 local dap = require("dap")
 vim.keymap.set(
