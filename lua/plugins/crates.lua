@@ -3,6 +3,8 @@ return {
 	tag = "stable",
 	event = "VeryLazy",
 	config = function()
-		require("crates").setup()
+		local crates = require("crates")
+		crates.setup()
+		crates.show()
 	end,
 }
