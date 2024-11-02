@@ -1,9 +1,9 @@
 require("config.lazy")
 require("config.keymap")
 
--- shell
--- vim.opt.shell="zsh"
--- vim.opt.shellcmdflag="-c"
+-- exrc
+-- vim.o.exrc = true
+-- vim.o.secure = true
 
 -- swap
 vim.opt.swapfile = false
