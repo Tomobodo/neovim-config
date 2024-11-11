@@ -20,50 +20,59 @@ return {
 		event = "VeryLazy",
 		config = function()
 			local dap = require("dap")
-			local dapui = require("dapui")
-			dapui.setup()
-			dap.listeners.after.event_initialized["dapui_config"] = function()
-				dapui.open()
-			end
-			dap.listeners.before.event_terminated["dapui_config"] = function()
-				dapui.close()
-			end
-			dap.listeners.before.event_exited["dapui_config"] = function()
-				dapui.close()
-			end
-
-			--[[ dap.configurations.rust = {
-				{
-					name = "Launch",
-					type = "codelldb",
-					request = "launch",
-					program = function()
-						return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/bin/program", "file")
-					end,
-					cwd = "${workspaceFolder}",
-					initCommands = function() -- add rust types support (optional)
-						-- Find out where to look for the pretty printer Python module
-						local rustc_sysroot = vim.fn.trim(vim.fn.system("rustc --print sysroot"))
-
-						local script_import = 'command script import "'
-							.. rustc_sysroot
-							.. '/lib/rustlib/etc/lldb_lookup.py"'
-						local commands_file = rustc_sysroot .. "/lib/rustlib/etc/lldb_commands"
-
-						local commands = {}
-						local file = io.open(commands_file, "r")
-						if file then
-							for line in file:lines() do
-								table.insert(commands, line)
-							end
-							file:close()
-						end
-						table.insert(commands, 1, script_import)
-
-						return commands
-					end,
+			dap.adapters.run = {
+				type = "server",
+				port = "${port}",
+				executable = {
+					args = { "--port", "${port}" },
+					command = "codelldb",
 				},
-			} ]]
+				name = "run",
+			}
+
+			local dapui = require("dapui")
+			dapui.setup({
+				layouts = {
+					{
+						-- You can change the order of elements in the sidebar
+						elements = {
+							-- Provide IDs as strings or tables with "id" and "size" keys
+							{
+								id = "scopes",
+								size = 0.25, -- Can be float or integer > 1
+							},
+							{ id = "breakpoints", size = 0.25 },
+							{ id = "stacks", size = 0.25 },
+							{ id = "watches", size = 0.25 },
+						},
+						size = 40,
+						position = "left", -- Can be "left" or "right"
+					},
+					{
+						elements = {
+							"console",
+						},
+						size = 20,
+						position = "bottom",
+					},
+				},
+			})
+
+			dap.listeners.after.event_initialized["dapui_config"] = function(session, body)
+				local type = session.config.type
+
+				if type == "codelldb" then
+					dapui.open()
+				else
+					dapui.open({ layout = 2 })
+				end
+			end
+			dap.listeners.before.event_terminated["dapui_config"] = function(session, body)
+				local type = session.config.type
+			end
+			dap.listeners.before.event_exited["dapui_config"] = function(session, body)
+				local type = session.config.type
+			end
 		end,
 	},
 }

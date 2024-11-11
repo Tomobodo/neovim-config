@@ -12,25 +12,46 @@ return {
 				terminal = {
 					direction = "horizontal",
 				},
+				dap = {
+					adapter = false,
+				},
 				server = {
 					on_attach = function(client, bufnr)
+						local cmd = { "cargo", "build" }
+						local build = function(sc)
+							local output = sc.stdout
+							if sc.code ~= 0 or output == nil then
+								on_error(
+									"An error occurred while compiling. Please fix all compilation issues and try again."
+										.. "\nCommand: "
+										.. table.concat(cmd, " ")
+										.. (sc.stderr and "\nstderr: \n" .. sc.stderr or "")
+										.. (output and "\nstdout: " .. output or "")
+								)
+								return
+							end
+						end
+
 						-- keymap
 						vim.keymap.set("n", "<F9>", function()
 							vim.cmd("wa")
-							vim.cmd.RustLsp({ "runnables", bang = true })
-						end, { noremap = true, desc = "Run rust target" })
+							vim.system(cmd, {}, function(sc)
+								build(sc)
+								vim.schedule(function()
+									require("dap").run_last()
+								end)
+							end)
+						end, { noremap = true, desc = "run target" })
+
 						vim.keymap.set("n", "<F21>", function()
 							vim.cmd("wa")
-							vim.cmd.RustLsp({ "debuggables", bang = true })
-						end, { noremap = true, desc = "Debug rust target" })
-						vim.keymap.set("n", "<F33>", function()
-							vim.cmd("wa")
-							vim.cmd.RustLsp("debuggables")
-						end, { noremap = true, desc = "Show debuggables" })
-						vim.keymap.set("n", "<F57>", function()
-							vim.cmd("wa")
-							vim.cmd.RustLsp("runnables")
-						end, { noremap = true, desc = "Show runnables" })
+							vim.system(cmd, {}, function(sc)
+								build(sc)
+								vim.schedule(function()
+									require("dap").continue()
+								end)
+							end)
+						end, { noremap = true, desc = "select and run target" })
 						vim.keymap.set("n", "<F8>", function()
 							vim.cmd("wa")
 							vim.cmd.RustLsp("flyCheck")
