@@ -34,6 +34,17 @@ return {
 			cmd = { "clangd" },
 		})
 
+		-- Rust
+		lspconfig.rust_analyzer.setup({
+			settings = {
+				["rust-analyzer"] = {
+					diagnostics = {
+						enable = false,
+					},
+				},
+			},
+		})
+
 		-- Lua
 		lspconfig.lua_ls.setup({
 			capabilities = capabilities,
