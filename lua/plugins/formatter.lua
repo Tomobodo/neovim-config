@@ -9,12 +9,15 @@ return {
 			logging = true,
 			log_level = vim.log.levels.WARN,
 			filetype = {
+				asm = {
+					require("formatter.filetypes.asm").asmfmt,
+				},
 				lua = {
 					require("formatter.filetypes.lua").stylua,
 				},
-				cmake = {
-					require("formatter.filetypes.cmake").cmakeformat,
-				},
+				-- cmake = {
+				-- 	require("formatter.filetypes.cmake").cmakeformat,
+				-- },
 				c = {
 					require("formatter.filetypes.c").clangformat,
 				},
