@@ -151,3 +151,71 @@ end, {
 	noremap = true,
 	desc = "Toggle dapui",
 })
+
+--zig
+local function zig_build(callback_on_success)
+	vim.cmd("wa") -- Sauvegarder tous les fichiers
+
+	-- Effacer et réinitialiser Quickfix
+	vim.cmd("cclose")
+	vim.cmd("cexpr []")
+
+	-- Exécuter le job pour `zig build`
+	vim.fn.jobstart("zig build", {
+		stdout_buffered = false,
+		on_stdout = function(_, data, _)
+			if data then
+				for _, line in ipairs(data) do
+					if line ~= "" then
+						vim.fn.setqflist({}, "a", { lines = { line } })
+					end
+				end
+				vim.cmd("copen")
+			end
+		end,
+		on_stderr = function(_, data, _)
+			if data then
+				for _, line in ipairs(data) do
+					if line ~= "" then
+						vim.fn.setqflist({}, "a", { lines = { line } })
+					end
+				end
+				vim.cmd("copen")
+			end
+		end,
+		on_exit = function(_, exit_code, _)
+			if exit_code == 0 then
+				vim.notify("Build completed successfully!", vim.log.levels.INFO)
+				if callback_on_success then
+					vim.cmd("cclose")
+					callback_on_success()
+				end
+			else
+				vim.notify("Build failed! Check Quickfix.", vim.log.levels.ERROR)
+			end
+		end,
+	})
+end
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "zig" },
+	callback = function()
+		vim.schedule(function()
+			vim.keymap.set("n", "<F8>", function()
+				zig_build(nil)
+			end, { noremap = true, desc = "build project" })
+
+			vim.keymap.set("n", "<S-F9>", function()
+				zig_build(function()
+					dap.continue()
+				end)
+			end, { noremap = true, desc = "build and run last launch target" })
+
+			vim.keymap.set("n", "<F9>", function()
+				zig_build(function()
+					dap.run_last()
+				end)
+			end, { noremap = true, desc = "build and run" })
+		end)
+	end,
+})

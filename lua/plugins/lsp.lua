@@ -100,5 +100,10 @@ return {
 		lspconfig.phpactor.setup({
 			capabilities = capabilities,
 		})
+
+		-- ZIG
+		lspconfig.zls.setup({
+			capabilities = capabilities,
+		})
 	end,
 }

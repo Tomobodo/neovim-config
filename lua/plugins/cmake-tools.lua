@@ -1,13 +1,14 @@
 local cmake_kits_path = os.getenv("CMAKE_KITS_PATH")
 
 return {
-	"Civitasv/cmake-tools.nvim",
+	"Tomobodo/cmake-tools.nvim",
 	event = "VeryLazy",
 	cmd = { "CMake" },
 	config = function()
 		local osys = require("cmake-tools.osys")
 		require("cmake-tools").setup({
 			cmake_command = "cmake",
+			ctest_commend = "ctest",
 			cmake_regenerate_on_save = true,
 			cmake_generate_options = { "-DCMAKE_EXPORT_COMPILE_COMMANDS=1" },
 			cmake_build_options = {},
@@ -62,6 +63,7 @@ return {
 				spinner = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }, -- icons used for progress display
 				refresh_rate_ms = 100, -- how often to iterate icons
 			},
+			cmake_virtual_text_support = true,
 		})
 	end,
 }

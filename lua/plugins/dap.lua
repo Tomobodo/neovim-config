@@ -20,12 +20,16 @@ return {
 		event = "VeryLazy",
 		config = function()
 			local dap = require("dap")
+
+			local codelldb_path = vim.fn.stdpath("data") .. "/mason/bin/codelldb.CMD"
+
 			dap.adapters.run = {
 				type = "server",
 				port = "${port}",
 				executable = {
 					args = { "--port", "${port}" },
-					command = "codelldb",
+					command = codelldb_path,
+					detached = false,
 				},
 				name = "run",
 			}
