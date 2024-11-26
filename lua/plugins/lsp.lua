@@ -23,13 +23,16 @@ return {
 		-- C / CPP
 		lspconfig.clangd.setup({
 			capabilities = capabilities,
-			root_dir = util.root_pattern(
-				".clangd",
-				".clang-tidy",
-				".clang-format",
-				"compile_commands.json",
-				"CMakeLists.txt"
-			),
+			root_dir = function(fname)
+				return util.root_pattern(
+					".clangd",
+					".clang-tidy",
+					".clang-format",
+					"compile_commands.json",
+					"compile_flags.txt",
+					"configure.ac" -- AutoTools
+				)(fname) or util.find_git_ancestor(fname)
+			end,
 			single_file_support = true,
 			cmd = { "clangd" },
 		})

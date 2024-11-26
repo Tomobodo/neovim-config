@@ -5,6 +5,9 @@ require("config.keymap")
 -- vim.o.exrc = true
 -- vim.o.secure = true
 
+-- session
+vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+
 -- swap
 vim.opt.swapfile = false
 
