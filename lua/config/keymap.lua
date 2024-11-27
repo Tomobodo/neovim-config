@@ -121,37 +121,11 @@ vim.api.nvim_create_autocmd("LspAttach", {
 local cmake = require("cmake-tools")
 
 local disable_clangd = function()
-	print("Stopping lsp")
-	vim.cmd("LspStop clangd")
+	-- vim.cmd("LspStop clangd")
 end
 
 local enable_clangd = function()
-	print("Starting lsp")
-	vim.cmd("LspStart clangd")
-end
-
--- hack to stop and restart lsp server because it bug with modules and keep the
--- modules files locked so it prevent from building more than once ruining the
--- workflow, until this is fixed this is how i'll circumvent it
-local cmake_build = function()
-	disable_clangd()
-	cmake.build({}, function()
-		enable_clangd()
-	end)
-end
-
-local cmake_run = function()
-	disable_clangd()
-	cmake.run({}, function()
-		enable_clangd()
-	end)
-end
-
-local cmake_debug = function()
-	disable_clangd()
-	cmake.debug({}, function()
-		enable_clangd()
-	end)
+	-- vim.cmd("LspStart clangd")
 end
 
 -- Autocommand pour définir des raccourcis lorsque des fichiers C/C++ sont ouverts
@@ -159,9 +133,9 @@ vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "c", "cpp", "cxx", "h", "hpp", "hxx", "cmake", "CMakeLists.txt" },
 	callback = function()
 		vim.schedule(function()
-			vim.keymap.set("n", "<F8>", cmake_build, { noremap = true, desc = "Build project" })
-			vim.keymap.set("n", "<F9>", cmake_run, { noremap = true, desc = "Build and run project" })
-			vim.keymap.set("n", "<S-F9>", cmake_debug, { noremap = true, desc = "Build and debug project" })
+			vim.keymap.set("n", "<F8>", "<cmd>CMakeBuild<cr>", { noremap = true, desc = "Build project" })
+			vim.keymap.set("n", "<F9>", "<cmd>CMakeRun<cr>", { noremap = true, desc = "Build and run project" })
+			vim.keymap.set("n", "<S-F9>", "<cmd>CMakeDebug<cr>", { noremap = true, desc = "Build and debug project" })
 		end)
 	end,
 })

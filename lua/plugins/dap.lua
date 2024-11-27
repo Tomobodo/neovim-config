@@ -72,13 +72,10 @@ return {
 				end
 			end
 			dap.listeners.before.event_terminated["dapui_config"] = function(session, body)
-				local type = session.config.type
-				vim.defer_fn(function()
-					dapui.toggle()
-				end, 1000)
+				dapui.close()
 			end
 			dap.listeners.before.event_exited["dapui_config"] = function(session, body)
-				local type = session.config.type
+				dapui.close()
 			end
 		end,
 	},
