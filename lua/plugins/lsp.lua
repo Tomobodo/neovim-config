@@ -34,7 +34,14 @@ return {
 				)(fname) or util.find_git_ancestor(fname)
 			end,
 			single_file_support = true,
-			cmd = { "clangd" },
+			cmd = {
+				"clangd",
+				"--background-index",
+				"--clang-tidy",
+				"--completion-style=bundled",
+				"--cross-file-rename",
+				"--header-insertion=iwyu",
+			},
 		})
 
 		-- Rust
