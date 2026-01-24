@@ -60,3 +60,11 @@ autocmd({ "BufRead", "BufNewFile" }, {
 	pattern = "*.njk",
 	command = "setfiletype html",
 })
+
+vim.filetype.add({
+	extension = {
+		ixx = "cpp",
+		cppm = "cpp",
+		mpp = "cpp",
+	},
+})

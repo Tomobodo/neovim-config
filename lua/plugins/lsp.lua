@@ -2,12 +2,11 @@ return {
 	"neovim/nvim-lspconfig",
 	event = "VeryLazy",
 	config = function()
-		local lspconfig = require("lspconfig")
-		local util = lspconfig.util
+		local util = vim.lsp.util
 		local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 		-- CMAKE
-		lspconfig.cmake.setup({
+		vim.lsp.config.cmake = {
 			capabilities = capabilities,
 			filetypes = {
 				"cmake",
@@ -15,30 +14,44 @@ return {
 			init_options = {
 				buildDirectory = "build",
 			},
-			root_dir = util.root_pattern("CMakePresets.json", "CTestConfig.cmake", "build", "cmake"),
+			root_markers = { "CMakeLists.txt", "CMakePresets.json", "CTestConfig.cmake", "build", "cmake" },
 			single_file_support = true,
 			cmd = { "cmake-language-server" },
-		})
+		}
+
+		vim.lsp.enable({ "cmake" })
 
 		-- C / CPP
-		lspconfig.clangd.setup({
+		vim.lsp.clangd = {
 			capabilities = capabilities,
-			root_dir = function(fname)
-				return util.root_pattern(
-					".clangd",
-					".clang-tidy",
-					".clang-format",
-					"compile_commands.json",
-					"compile_flags.txt",
-					"configure.ac" -- AutoTools
-				)(fname) or util.find_git_ancestor(fname)
-			end,
+			root_markers = {
+				".clangd",
+				".clang-tidy",
+				".clang-format",
+				"compile_commands.json",
+				"compile_flags.txt",
+				"configure.ac",
+			},
+			filetypes = {
+				"c",
+				"cpp",
+				"cc",
+				"mpp",
+				"ixx",
+			},
 			single_file_support = true,
-			cmd = { "clangd" },
-		})
+			cmd = {
+				"clangd",
+				"--background-index",
+				"--clang-tidy",
+				"--query-driver=/usr/bin/clang++-21,/usr/bin/g++,/usr/bin/c++",
+			},
+		}
+
+		vim.lsp.enable({ "clangd" })
 
 		-- Rust
-		lspconfig.rust_analyzer.setup({
+		vim.lsp.config.rust_analyzer = {
 			settings = {
 				["rust-analyzer"] = {
 					diagnostics = {
@@ -46,10 +59,12 @@ return {
 					},
 				},
 			},
-		})
+		}
+
+		vim.lsp.enable({ "rust_analyzer" })
 
 		-- Lua
-		lspconfig.lua_ls.setup({
+		vim.lsp.config.lua_ls = {
 			capabilities = capabilities,
 			on_init = function(client)
 				local path = client.workspace_folders[1].name
@@ -72,14 +87,18 @@ return {
 			settings = {
 				Lua = {},
 			},
-		})
+		}
+
+		vim.lsp.enable({ "lua_ls" })
 
 		-- Typescript
-		lspconfig.ts_ls.setup({
+		vim.lsp.config.ts_ls = {
 			capabilities = capabilities,
-		})
+		}
 
-		lspconfig.eslint.setup({
+		vim.lsp.enable({ "ts_ls" })
+
+		vim.lsp.config.eslint = {
 			capabilities = capabilities,
 			on_attach = function(client, bufnr)
 				vim.api.nvim_create_autocmd("BufWritePre", {
@@ -87,26 +106,36 @@ return {
 					command = "EslintFixAll",
 				})
 			end,
-		})
+		}
+
+		vim.lsp.enable({ "esling" })
 
 		-- CSS, SCSS
-		lspconfig.cssls.setup({
+		vim.lsp.config.cssls = {
 			capabilities = capabilities,
-		})
+		}
+
+		vim.lsp.enable({ "cssls" })
 
 		-- JSON
-		lspconfig.jsonls.setup({
+		vim.lsp.config.jsonls = {
 			capabilities = capabilities,
-		})
+		}
+
+		vim.lsp.enable({ "jsonls" })
 
 		-- PHP
-		lspconfig.phpactor.setup({
+		vim.lsp.config.phpactor = {
 			capabilities = capabilities,
-		})
+		}
+
+		vim.lsp.enable({ "phpactor" })
 
 		-- ZIG
-		lspconfig.zls.setup({
+		vim.lsp.config.zls = {
 			capabilities = capabilities,
-		})
+		}
+
+		vim.lsp.enable({ "zls" })
 	end,
 }
