@@ -44,19 +44,14 @@ return {
 				"clangd",
 				"--background-index",
 				"--clang-tidy",
-<<<<<<< HEAD
 				"--query-driver=/usr/bin/clang++-21,/usr/bin/g++,/usr/bin/c++",
-			},
-		}
-
-		vim.lsp.enable({ "clangd" })
-=======
 				"--completion-style=bundled",
 				"--cross-file-rename",
 				"--header-insertion=iwyu",
 			},
-		})
->>>>>>> f34c00bf9a23932a9fd499cef88f2b3e58685976
+		}
+
+		vim.lsp.enable({ "clangd" })
 
 		-- Rust
 		vim.lsp.config.rust_analyzer = {
