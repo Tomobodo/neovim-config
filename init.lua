@@ -1,6 +1,8 @@
 require("config.lazy")
 require("config.keymap")
 
+vim.opt.shortmess:append("I")
+
 -- exrc
 -- vim.o.exrc = true
 -- vim.o.secure = true
