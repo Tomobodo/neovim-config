@@ -6,20 +6,15 @@ return {
 		local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 		-- CMAKE
-		vim.lsp.config.cmake = {
+		vim.lsp.config.neocmake = {
 			capabilities = capabilities,
-			filetypes = {
-				"cmake",
-			},
-			init_options = {
-				buildDirectory = "build",
-			},
+			filetypes = { "cmake" },
 			root_markers = { "CMakeLists.txt", "CMakePresets.json", "CTestConfig.cmake", "build", "cmake" },
 			single_file_support = true,
-			cmd = { "cmake-language-server" },
+			cmd = { "neocmakelsp", "stdio" },
 		}
 
-		vim.lsp.enable({ "cmake" })
+		vim.lsp.enable({ "neocmake" })
 
 		-- C / CPP
 		vim.lsp.clangd = {
@@ -103,15 +98,9 @@ return {
 
 		vim.lsp.config.eslint = {
 			capabilities = capabilities,
-			on_attach = function(client, bufnr)
-				vim.api.nvim_create_autocmd("BufWritePre", {
-					buffer = bufnr,
-					command = "EslintFixAll",
-				})
-			end,
 		}
 
-		vim.lsp.enable({ "esling" })
+		vim.lsp.enable({ "eslint" })
 
 		-- CSS, SCSS
 		vim.lsp.config.cssls = {

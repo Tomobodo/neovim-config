@@ -1,4 +1,4 @@
--- configure clipboard, unnamedplus slow down nvim too much
+vim.opt.clipboard = "unnamedplus"
 
 vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 	once = true,
@@ -15,7 +15,18 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 				},
 			}
 		elseif vim.fn.has("unix") == 1 then
-			if vim.fn.executable("xclip") == 1 then
+			if vim.fn.executable("wl-copy") == 1 then
+				vim.g.clipboard = {
+					copy = {
+						["+"] = "wl-copy",
+						["*"] = "wl-copy",
+					},
+					paste = {
+						["+"] = "wl-paste --no-newline",
+						["*"] = "wl-paste --no-newline",
+					},
+				}
+			elseif vim.fn.executable("xclip") == 1 then
 				vim.g.clipboard = {
 					copy = {
 						["+"] = "xclip -selection clipboard",
@@ -39,8 +50,6 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufNewFile" }, {
 				}
 			end
 		end
-
-		vim.opt.clipboard = "unnamedplus"
 	end,
 	desc = "Lazy load clipboard",
 })
