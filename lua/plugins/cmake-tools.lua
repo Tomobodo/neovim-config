@@ -1,7 +1,7 @@
 local cmake_kits_path = os.getenv("CMAKE_KITS_PATH")
 
 return {
-	"Tomobodo/cmake-tools.nvim",
+	"Civitasv/cmake-tools.nvim",
 	event = "VeryLazy",
 	cmd = { "CMake" },
 	config = function()
@@ -60,10 +60,31 @@ return {
 			},
 			cmake_notifications = {
 				enable = false,
-				spinner = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }, -- icons used for progress display
-				refresh_rate_ms = 100, -- how often to iterate icons
+				spinner = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" },
+				refresh_rate_ms = 100,
 			},
 			cmake_virtual_text_support = true,
+		})
+
+		vim.api.nvim_create_autocmd("FileType", {
+			pattern = { "c", "cpp", "cmake" },
+			callback = function(ev)
+				vim.keymap.set("n", "<leader>ct", function()
+					require("cmake-tools").select_build_target(false, function() end)
+				end, { noremap = true, buffer = ev.buf, desc = "Select build target" })
+
+				vim.keymap.set("n", "<leader>cT", function()
+					require("cmake-tools").select_launch_target(false, function() end)
+				end, { noremap = true, buffer = ev.buf, desc = "Select launch target" })
+
+				vim.keymap.set("n", "<leader>cp", function()
+					require("cmake-tools").select_configure_preset(function() end)
+				end, { noremap = true, buffer = ev.buf, desc = "Select configure preset" })
+
+				vim.keymap.set("n", "<leader>cP", function()
+					require("cmake-tools").select_build_preset(function() end)
+				end, { noremap = true, buffer = ev.buf, desc = "Select build preset" })
+			end,
 		})
 	end,
 }

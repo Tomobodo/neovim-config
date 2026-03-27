@@ -48,19 +48,6 @@ return {
 
 		vim.lsp.enable({ "clangd" })
 
-		-- Rust
-		vim.lsp.config.rust_analyzer = {
-			settings = {
-				["rust-analyzer"] = {
-					diagnostics = {
-						enable = false,
-					},
-				},
-			},
-		}
-
-		vim.lsp.enable({ "rust_analyzer" })
-
 		-- Lua
 		vim.lsp.config.lua_ls = {
 			capabilities = capabilities,

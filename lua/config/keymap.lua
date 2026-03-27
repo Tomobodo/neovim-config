@@ -133,9 +133,92 @@ vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "c", "cpp", "cxx", "h", "hpp", "hxx", "cmake", "CMakeLists.txt" },
 	callback = function()
 		vim.schedule(function()
-			vim.keymap.set("n", "<F8>", "<cmd>CMakeBuild<cr>", { noremap = true, desc = "Build project" })
-			vim.keymap.set("n", "<F9>", "<cmd>CMakeRun<cr>", { noremap = true, desc = "Build and run project" })
-			vim.keymap.set("n", "<S-F9>", "<cmd>CMakeDebug<cr>", { noremap = true, desc = "Build and debug project" })
+			local function cmake_build_then(target, on_success)
+				local cmake = require("cmake-tools")
+				cmake.build({ target = target }, function(result)
+					if not result:is_ok() then
+						return
+					end
+					on_success()
+				end)
+			end
+
+			local function with_launch_target(cb)
+				local cmake = require("cmake-tools")
+				local target = cmake.get_launch_target()
+				if target then
+					cb(target)
+				else
+					cmake.select_launch_target(false, function(result)
+						if not result:is_ok() then return end
+						cb(cmake.get_launch_target())
+					end)
+				end
+			end
+
+			vim.keymap.set("n", "<F8>", function()
+				vim.cmd("wa")
+				local cmake = require("cmake-tools")
+				local build_target = cmake.get_build_target()
+				cmake_build_then(build_target and build_target[1] or nil, function() end)
+			end, { noremap = true, desc = "Build" })
+
+			vim.keymap.set("n", "<F9>", function()
+				vim.cmd("wa")
+				with_launch_target(function(target)
+					cmake_build_then(target, function()
+						local cmake = require("cmake-tools")
+						local path = cmake.get_launch_target_path()
+						if not path then return end
+						cmake.close_executor()
+						require("dap").run({
+							name = target,
+							type = "codelldb",
+							request = "launch",
+							program = path,
+							cwd = vim.fn.fnamemodify(path, ":h"),
+							stopOnEntry = false,
+							runInTerminal = true,
+							console = "integratedTerminal",
+							args = {},
+						})
+					end)
+				end)
+			end, { noremap = true, desc = "Debug" })
+
+			vim.keymap.set("n", "<S-F9>", function()
+				vim.cmd("wa")
+				local cmake = require("cmake-tools")
+				cmake.select_launch_target(false, function(result)
+					if not result:is_ok() then return end
+					local target = cmake.get_launch_target()
+					cmake_build_then(target, function()
+						local path = cmake.get_launch_target_path()
+						if not path then return end
+						cmake.close_executor()
+						require("dap").run({
+							name = target,
+							type = "codelldb",
+							request = "launch",
+							program = path,
+							cwd = vim.fn.fnamemodify(path, ":h"),
+							stopOnEntry = false,
+							runInTerminal = true,
+							console = "integratedTerminal",
+							args = {},
+						})
+					end)
+				end)
+			end, { noremap = true, desc = "Pick target and debug" })
+
+			vim.keymap.set("n", "<F10>", function()
+				vim.cmd("wa")
+				with_launch_target(function(target)
+					cmake_build_then(target, function()
+						vim.cmd("CMakeRun")
+					end)
+				end)
+			end, { noremap = true, desc = "Run" })
 		end)
 	end,
 })

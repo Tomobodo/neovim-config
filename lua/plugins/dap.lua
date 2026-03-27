@@ -21,36 +21,33 @@ return {
 		config = function()
 			local dap = require("dap")
 
-			local codelldb_path = vim.fn.stdpath("data") .. "/mason/bin/codelldb.CMD"
+			local codelldb_path = vim.fn.stdpath("data") .. "/mason/bin/codelldb"
 
-			dap.adapters.run = {
+			dap.adapters.codelldb = {
 				type = "server",
 				port = "${port}",
 				executable = {
-					args = { "--port", "${port}" },
 					command = codelldb_path,
+					args = { "--port", "${port}" },
 					detached = false,
 				},
-				name = "run",
 			}
 
 			local dapui = require("dapui")
 			dapui.setup({
 				layouts = {
 					{
-						-- You can change the order of elements in the sidebar
 						elements = {
-							-- Provide IDs as strings or tables with "id" and "size" keys
 							{
 								id = "scopes",
-								size = 0.25, -- Can be float or integer > 1
+								size = 0.25,
 							},
 							{ id = "breakpoints", size = 0.25 },
 							{ id = "stacks", size = 0.25 },
 							{ id = "watches", size = 0.25 },
 						},
 						size = 40,
-						position = "left", -- Can be "left" or "right"
+						position = "left",
 					},
 					{
 						elements = {
@@ -64,7 +61,6 @@ return {
 
 			dap.listeners.after.event_initialized["dapui_config"] = function(session, body)
 				local type = session.config.type
-
 				if type == "codelldb" then
 					dapui.open()
 				else
