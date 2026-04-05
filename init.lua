@@ -29,8 +29,8 @@ vim.o.autoread = true
 vim.opt.number = true
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
-vim.opt.expandtab = true
-vim.bo.softtabstop = 2
+vim.opt.expandtab = false
+vim.bo.softtabstop = 0
 
 -- rendering
 vim.opt.termguicolors = true
@@ -78,5 +78,6 @@ vim.filetype.add({
 		ixx = "cpp",
 		cppm = "cpp",
 		mpp = "cpp",
+		ron = "ron",
 	},
 })

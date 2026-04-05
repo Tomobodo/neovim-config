@@ -17,8 +17,20 @@ return {
 		vim.lsp.enable({ "neocmake" })
 
 		-- C / CPP
-		vim.lsp.clangd = {
-			capabilities = capabilities,
+		vim.lsp.config.clangd = {
+			capabilities = vim.tbl_deep_extend("force", capabilities, {
+				textDocument = {
+					completion = {
+						editsNearCursor = true,
+					},
+				},
+				offsetEncoding = { "utf-8", "utf-16" },
+			}),
+			on_init = function(client, init_result)
+				if init_result.offsetEncoding then
+					client.offset_encoding = init_result.offsetEncoding
+				end
+			end,
 			root_markers = {
 				".clangd",
 				".clang-tidy",
@@ -39,10 +51,12 @@ return {
 				"clangd",
 				"--background-index",
 				"--clang-tidy",
-				"--query-driver=/usr/bin/clang++-21,/usr/bin/g++,/usr/bin/c++",
-				"--completion-style=bundled",
+				"--clang-tidy-checks=*",
+				"--query-driver=/usr/bin/clang++,/usr/bin/g++,/usr/bin/c++",
+				"--completion-style=detailed",
 				"--cross-file-rename",
 				"--header-insertion=iwyu",
+				"--all-scopes-completion",
 			},
 		}
 

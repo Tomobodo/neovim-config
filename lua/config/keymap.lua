@@ -143,6 +143,21 @@ vim.api.nvim_create_autocmd("FileType", {
 				end)
 			end
 
+			local function with_build_target(cb)
+				local cmake = require("cmake-tools")
+				local target = cmake.get_build_target()
+				if target then
+					cb(target)
+				else
+					cmake.select_build_target(false, function(result)
+						if not result:is_ok() then
+							return
+						end
+						cb(cmake.get_build_target())
+					end)
+				end
+			end
+
 			local function with_launch_target(cb)
 				local cmake = require("cmake-tools")
 				local target = cmake.get_launch_target()
@@ -150,7 +165,9 @@ vim.api.nvim_create_autocmd("FileType", {
 					cb(target)
 				else
 					cmake.select_launch_target(false, function(result)
-						if not result:is_ok() then return end
+						if not result:is_ok() then
+							return
+						end
 						cb(cmake.get_launch_target())
 					end)
 				end
@@ -158,9 +175,23 @@ vim.api.nvim_create_autocmd("FileType", {
 
 			vim.keymap.set("n", "<F8>", function()
 				vim.cmd("wa")
+				with_build_target(function(target)
+					local cmake = require("cmake-tools")
+					local build_target = cmake.get_build_target()
+					cmake_build_then(build_target and build_target[1] or nil, function() end)
+				end)
+			end, { noremap = true, desc = "Build" })
+
+			vim.keymap.set("n", "<S-F8>", function()
+				vim.cmd("wa")
 				local cmake = require("cmake-tools")
-				local build_target = cmake.get_build_target()
-				cmake_build_then(build_target and build_target[1] or nil, function() end)
+				cmake.select_build_target(false, function(result)
+					if not result:is_ok() then
+						return
+					end
+					local build_target = cmake.get_build_target()
+					cmake_build_then(build_target and build_target[1] or nil, function() end)
+				end)
 			end, { noremap = true, desc = "Build" })
 
 			vim.keymap.set("n", "<F9>", function()
@@ -169,7 +200,9 @@ vim.api.nvim_create_autocmd("FileType", {
 					cmake_build_then(target, function()
 						local cmake = require("cmake-tools")
 						local path = cmake.get_launch_target_path()
-						if not path then return end
+						if not path then
+							return
+						end
 						cmake.close_executor()
 						require("dap").run({
 							name = target,
@@ -190,11 +223,15 @@ vim.api.nvim_create_autocmd("FileType", {
 				vim.cmd("wa")
 				local cmake = require("cmake-tools")
 				cmake.select_launch_target(false, function(result)
-					if not result:is_ok() then return end
+					if not result:is_ok() then
+						return
+					end
 					local target = cmake.get_launch_target()
 					cmake_build_then(target, function()
 						local path = cmake.get_launch_target_path()
-						if not path then return end
+						if not path then
+							return
+						end
 						cmake.close_executor()
 						require("dap").run({
 							name = target,

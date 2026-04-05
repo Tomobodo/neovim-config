@@ -14,6 +14,37 @@ return {
 					server = {
 						capabilities = require("cmp_nvim_lsp").default_capabilities(),
 						on_attach = function(client, bufnr)
+							local state_file = vim.fn.stdpath("data") .. "/rust_launch_args.json"
+
+							local function load_args()
+								local f = io.open(state_file, "r")
+								if not f then return {} end
+								local content = f:read("*a")
+								f:close()
+								local ok, data = pcall(vim.fn.json_decode, content)
+								if not ok or type(data) ~= "table" then return {} end
+								return data[vim.fn.getcwd()] or {}
+							end
+
+							local function save_args(args)
+								local f = io.open(state_file, "r")
+								local data = {}
+								if f then
+									local content = f:read("*a")
+									f:close()
+									local ok, parsed = pcall(vim.fn.json_decode, content)
+									if ok and type(parsed) == "table" then data = parsed end
+								end
+								data[vim.fn.getcwd()] = args
+								local out = io.open(state_file, "w")
+								if out then
+									out:write(vim.fn.json_encode(data))
+									out:close()
+								end
+							end
+
+							local launch_args = load_args()
+
 							local function rust_build_then(on_success)
 								vim.cmd("compiler cargo")
 								local efm = vim.o.errorformat
@@ -49,7 +80,7 @@ return {
 							vim.keymap.set("n", "<F9>", function()
 								vim.cmd("wa")
 								rust_build_then(function()
-									vim.cmd({ cmd = "RustLsp", args = { "debuggables" }, bang = true })
+									vim.cmd({ cmd = "RustLsp", args = vim.list_extend({ "debuggables" }, launch_args), bang = true })
 								end)
 							end, { noremap = true, buffer = bufnr, desc = "Debug" })
 
@@ -63,7 +94,7 @@ return {
 							vim.keymap.set("n", "<F10>", function()
 								vim.cmd("wa")
 								rust_build_then(function()
-									vim.cmd({ cmd = "RustLsp", args = { "runnables" }, bang = true })
+									vim.cmd({ cmd = "RustLsp", args = vim.list_extend({ "runnables" }, launch_args), bang = true })
 								end)
 							end, { noremap = true, buffer = bufnr, desc = "Run" })
 
@@ -74,6 +105,17 @@ return {
 							vim.keymap.set("n", "<leader>cT", function()
 								vim.cmd.RustLsp("debuggables")
 							end, { noremap = true, buffer = bufnr, desc = "Select debug target" })
+
+							vim.keymap.set("n", "<leader>cA", function()
+								vim.ui.input(
+									{ prompt = "Launch args: ", default = table.concat(launch_args, " ") },
+									function(input)
+										if input == nil then return end
+										launch_args = vim.split(input, " ", { trimempty = true })
+										save_args(launch_args)
+									end
+								)
+							end, { noremap = true, buffer = bufnr, desc = "Set launch args" })
 
 							vim.keymap.set("n", "<leader>cd", function()
 								vim.cmd.RustLsp("openDocs")

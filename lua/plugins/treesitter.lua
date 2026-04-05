@@ -14,9 +14,12 @@ return {
 			"rust",
 			"html",
 			"php",
+			"ron",
 		},
 		sync_install = false,
-		highlight = { enable = true },
+		highlight = {
+			enable = true,
+		},
 		indent = { enable = true },
 	},
 }

@@ -16,6 +16,7 @@ return {
 							preview_width = 0.55,
 						},
 					},
+					find_command = { "fd", "--type", "f", "--hidden", "--follow" },
 				},
 				extensions = {
 					["ui-select"] = {
