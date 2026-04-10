@@ -66,7 +66,11 @@ vim.keymap.set("n", "<leader>fh", builtin.help_tags, {})
 -- nvimtree
 vim.keymap.set("n", "<c-n>", "<Cmd>NvimTreeFindFileToggle<cr>", { desc = "toggle file tree" })
 
--- diagnostic
+-- diffview
+vim.keymap.set("n", "<leader>Do", "<cmd>DiffviewOpen<cr>", { desc = "Diffview Open" })
+vim.keymap.set("n", "<leader>Dh", "<cmd>DiffviewFileHistory %<cr>", { desc = "Diffview File History" })
+vim.keymap.set("n", "<leader>Dq", "<cmd>DiffviewClose<cr>", { desc = "Diffview Close" })
+
 vim.keymap.set("n", "f", vim.diagnostic.open_float, { noremap = true, silent = true })
 
 -- lsp
