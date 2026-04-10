@@ -13,9 +13,6 @@ return {
 			cmake_generate_options = { "-DCMAKE_EXPORT_COMPILE_COMMANDS=1" },
 			cmake_build_options = {},
 			cmake_build_directory = function()
-				if osys.iswin32 then
-					return "build\\${variant:buildType}"
-				end
 				return "build/${variant:buildType}"
 			end,
 			cmake_soft_link_compile_commands = true,
